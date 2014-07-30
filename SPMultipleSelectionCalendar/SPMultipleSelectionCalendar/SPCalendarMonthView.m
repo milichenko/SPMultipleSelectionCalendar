@@ -10,7 +10,7 @@
 
 @interface SPCalendarMonthView ()
 
-@property (strong, nonatomic) NSArray *dateOfMonthButtons;
+@property (strong, nonatomic) NSMutableArray *dateOfMonthButtons;
 
 @end
 
@@ -29,34 +29,29 @@
     
     if (self)
     {
-        NSMutableArray *buttonsArray = [NSMutableArray array];
-        
-        for (int i = 0; i < 35; i++)
-        {
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [buttonsArray addObject:btn];
-        }
-        
-        self.dateOfMonthButtons = @[@[buttonsArray[0], buttonsArray[1], buttonsArray[2], buttonsArray[3], buttonsArray[4], buttonsArray[5], buttonsArray[6]],
-                                    @[buttonsArray[7], buttonsArray[8], buttonsArray[9], buttonsArray[10], buttonsArray[11], buttonsArray[12], buttonsArray[13]],
-                                    @[buttonsArray[14], buttonsArray[15], buttonsArray[16], buttonsArray[17], buttonsArray[18], buttonsArray[19], buttonsArray[20]],
-                                    @[buttonsArray[21], buttonsArray[22], buttonsArray[23], buttonsArray[24], buttonsArray[25], buttonsArray[26], buttonsArray[27]],
-                                    @[buttonsArray[28], buttonsArray[29], buttonsArray[30], buttonsArray[31], buttonsArray[32], buttonsArray[33], buttonsArray[34]]];
-        
         CGFloat dayOfMonthButtonsHeight = self.frame.size.height / 5.0f;
         
         CGFloat btnY = 0.0f;
         
+        self.dateOfMonthButtons = [NSMutableArray array];
+        
         for (int i = 0; i < 5; i++)
         {
+            self.dateOfMonthButtons[i] = [NSMutableArray array];
+            
             CGFloat btnX = 0.0f;
             
             for (int j = 0; j < 7; j++)
             {
-                UIButton *btn = self.dateOfMonthButtons[i][j];
+                UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
                 btn.frame = CGRectMake(btnX, btnY, CONTROLS_WIDTH, dayOfMonthButtonsHeight);
                 [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [btn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateSelected];
+                [btn addTarget:self action:@selector(dayButtonAction:) forControlEvents:UIControlEventTouchDown];
+                
                 [self addSubview:btn];
+                
+                self.dateOfMonthButtons[i][j] = btn;
                 
                 btnX += CONTROLS_WIDTH;
             }
@@ -127,6 +122,15 @@
             }
         }
     }
+}
+
+#pragma mark - Action
+
+- (void)dayButtonAction:(UIButton *)sender
+{
+    sender.selected = !sender.selected;
+
+    [sender setTitleColor:sender.selected ? [UIColor lightGrayColor] : [UIColor blackColor] forState:UIControlStateNormal];
 }
 
 @end
