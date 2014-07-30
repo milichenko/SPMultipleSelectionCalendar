@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63A80CFD1988D79400072249 /* SPCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A80CFC1988D79400072249 /* SPCalendarView.m */; };
+		63A80D001988DF6100072249 /* SPCalendarMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A80CFF1988DF6100072249 /* SPCalendarMonthView.m */; };
 		63A82B251987D6D700E83B70 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A82B241987D6D700E83B70 /* Foundation.framework */; };
 		63A82B271987D6D700E83B70 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A82B261987D6D700E83B70 /* CoreGraphics.framework */; };
 		63A82B291987D6D700E83B70 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A82B281987D6D700E83B70 /* UIKit.framework */; };
@@ -21,7 +23,6 @@
 		63A82B4A1987D6D700E83B70 /* SPMultipleSelectionCalendarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A82B491987D6D700E83B70 /* SPMultipleSelectionCalendarTests.m */; };
 		63A82B561987D71E00E83B70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63A82B551987D71E00E83B70 /* Main.storyboard */; };
 		63A82B591987D73800E83B70 /* SPTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A82B581987D73800E83B70 /* SPTestViewController.m */; };
-		63A82B5C1987D87900E83B70 /* SPCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A82B5B1987D87900E83B70 /* SPCalendarView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		63A80CFB1988D79400072249 /* SPCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPCalendarView.h; sourceTree = "<group>"; };
+		63A80CFC1988D79400072249 /* SPCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPCalendarView.m; sourceTree = "<group>"; };
+		63A80CFE1988DF6100072249 /* SPCalendarMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPCalendarMonthView.h; sourceTree = "<group>"; };
+		63A80CFF1988DF6100072249 /* SPCalendarMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPCalendarMonthView.m; sourceTree = "<group>"; };
 		63A82B211987D6D700E83B70 /* SPMultipleSelectionCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPMultipleSelectionCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63A82B241987D6D700E83B70 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63A82B261987D6D700E83B70 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -54,8 +59,6 @@
 		63A82B551987D71E00E83B70 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63A82B571987D73800E83B70 /* SPTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPTestViewController.h; sourceTree = "<group>"; };
 		63A82B581987D73800E83B70 /* SPTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPTestViewController.m; sourceTree = "<group>"; };
-		63A82B5A1987D87900E83B70 /* SPCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPCalendarView.h; sourceTree = "<group>"; };
-		63A82B5B1987D87900E83B70 /* SPCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPCalendarView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +85,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		63A80CFA1988D79400072249 /* SPMultipleSelectionCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				63A80CFB1988D79400072249 /* SPCalendarView.h */,
+				63A80CFC1988D79400072249 /* SPCalendarView.m */,
+				63A80CFE1988DF6100072249 /* SPCalendarMonthView.h */,
+				63A80CFF1988DF6100072249 /* SPCalendarMonthView.m */,
+			);
+			path = SPMultipleSelectionCalendar;
+			sourceTree = "<group>";
+		};
 		63A82B181987D6D700E83B70 = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +129,7 @@
 		63A82B2A1987D6D700E83B70 /* SPMultipleSelectionCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				63A80CFA1988D79400072249 /* SPMultipleSelectionCalendar */,
 				63A82B331987D6D700E83B70 /* SPAppDelegate.h */,
 				63A82B341987D6D700E83B70 /* SPAppDelegate.m */,
 				63A82B361987D6D700E83B70 /* Images.xcassets */,
@@ -122,8 +137,6 @@
 				63A82B551987D71E00E83B70 /* Main.storyboard */,
 				63A82B571987D73800E83B70 /* SPTestViewController.h */,
 				63A82B581987D73800E83B70 /* SPTestViewController.m */,
-				63A82B5A1987D87900E83B70 /* SPCalendarView.h */,
-				63A82B5B1987D87900E83B70 /* SPCalendarView.m */,
 			);
 			path = SPMultipleSelectionCalendar;
 			sourceTree = "<group>";
@@ -255,9 +268,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				63A82B311987D6D700E83B70 /* main.m in Sources */,
+				63A80D001988DF6100072249 /* SPCalendarMonthView.m in Sources */,
 				63A82B351987D6D700E83B70 /* SPAppDelegate.m in Sources */,
 				63A82B591987D73800E83B70 /* SPTestViewController.m in Sources */,
-				63A82B5C1987D87900E83B70 /* SPCalendarView.m in Sources */,
+				63A80CFD1988D79400072249 /* SPCalendarView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +468,7 @@
 				63A82B4F1987D6D700E83B70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		63A82B501987D6D700E83B70 /* Build configuration list for PBXNativeTarget "SPMultipleSelectionCalendarTests" */ = {
 			isa = XCConfigurationList;
@@ -462,6 +477,7 @@
 				63A82B521987D6D700E83B70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
