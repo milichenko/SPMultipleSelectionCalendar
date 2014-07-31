@@ -171,7 +171,7 @@
         
         self.dateLabel.text = [self.dateFormatter stringFromDate:self.selectedDate];
         
-        [self.monthViewController changeMonthViewInDirection:monthAnimationDirection];
+        [self.monthViewController changeMonthViewInDirection:monthAnimationDirection withDate:self.selectedDate];
     }
 }
 

@@ -52,7 +52,7 @@
     self.monthView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.monthViewFrame.size.width, self.monthViewFrame.size.height)];
     [self.view addSubview:self.monthView];
     
-    [self arrangeDayButtonsForView:self.monthView];
+    [self arrangeDayButtonsForView:self.monthView withDate:[NSDate date]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,7 +63,7 @@
 
 #pragma mark - Public methods
 
-- (void)changeMonthViewInDirection:(MonthAnimationDirection)animationDirection
+- (void)changeMonthViewInDirection:(MonthAnimationDirection)animationDirection withDate:(NSDate *)date
 {
     CGFloat viewToDisplayOriginY = 0.0f;
     CGFloat oldViewNewOriginY = 0.0f;
@@ -84,7 +84,7 @@
                                                                      self.monthView.frame.size.width,
                                                                      self.monthView.frame.size.height)];
     
-    [self arrangeDayButtonsForView:viewToDisplay];
+    [self arrangeDayButtonsForView:viewToDisplay withDate:date];
     
     [self.view addSubview:viewToDisplay];
     
@@ -114,7 +114,7 @@
 
 #pragma mark - Private methods
 
-- (void)arrangeDayButtonsForView:(UIView *)view
+- (void)arrangeDayButtonsForView:(UIView *)view withDate:(NSDate *)date
 {
     CGFloat dayOfMonthButtonsHeight = self.monthViewFrame.size.height / 5.0f;
     
@@ -146,7 +146,7 @@
         btnY += dayOfMonthButtonsHeight;
     }
     
-    [self arrangeMonthDaysInDate:[NSDate date]];
+    [self arrangeMonthDaysInDate:date];
 }
 
 - (void)arrangeMonthDaysInDate:(NSDate *)date

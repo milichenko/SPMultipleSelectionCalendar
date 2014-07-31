@@ -32,6 +32,6 @@ typedef NS_ENUM(NSUInteger, MonthAnimationDirection)
 
 - (id)initWithViewFrame:(CGRect)frame;
 
-- (void)changeMonthViewInDirection:(MonthAnimationDirection)animationDirection;
+- (void)changeMonthViewInDirection:(MonthAnimationDirection)animationDirection withDate:(NSDate *)date;
 
 @end
