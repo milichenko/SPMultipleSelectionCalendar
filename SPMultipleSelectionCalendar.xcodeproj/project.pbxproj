@@ -23,6 +23,7 @@
 		63A82B4A1987D6D700E83B70 /* SPMultipleSelectionCalendarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A82B491987D6D700E83B70 /* SPMultipleSelectionCalendarTests.m */; };
 		63A82B561987D71E00E83B70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63A82B551987D71E00E83B70 /* Main.storyboard */; };
 		63A82B591987D73800E83B70 /* SPTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A82B581987D73800E83B70 /* SPTestViewController.m */; };
+		63A97796198A2713006CA2AA /* SPCalendarMonthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A97795198A2713006CA2AA /* SPCalendarMonthViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,8 @@
 		63A82B551987D71E00E83B70 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63A82B571987D73800E83B70 /* SPTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPTestViewController.h; sourceTree = "<group>"; };
 		63A82B581987D73800E83B70 /* SPTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPTestViewController.m; sourceTree = "<group>"; };
+		63A97794198A2713006CA2AA /* SPCalendarMonthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPCalendarMonthViewController.h; sourceTree = "<group>"; };
+		63A97795198A2713006CA2AA /* SPCalendarMonthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPCalendarMonthViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +95,8 @@
 				63A80CFC1988D79400072249 /* SPCalendarView.m */,
 				63A80CFE1988DF6100072249 /* SPCalendarMonthView.h */,
 				63A80CFF1988DF6100072249 /* SPCalendarMonthView.m */,
+				63A97794198A2713006CA2AA /* SPCalendarMonthViewController.h */,
+				63A97795198A2713006CA2AA /* SPCalendarMonthViewController.m */,
 			);
 			path = SPMultipleSelectionCalendar;
 			sourceTree = "<group>";
@@ -271,6 +276,7 @@
 				63A80D001988DF6100072249 /* SPCalendarMonthView.m in Sources */,
 				63A82B351987D6D700E83B70 /* SPAppDelegate.m in Sources */,
 				63A82B591987D73800E83B70 /* SPTestViewController.m in Sources */,
+				63A97796198A2713006CA2AA /* SPCalendarMonthViewController.m in Sources */,
 				63A80CFD1988D79400072249 /* SPCalendarView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

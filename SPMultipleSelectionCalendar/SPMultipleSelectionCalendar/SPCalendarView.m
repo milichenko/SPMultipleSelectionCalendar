@@ -7,26 +7,19 @@
 //
 
 #import "SPCalendarView.h"
-#import "SPCalendarMonthView.h"
+#import "SPCalendarMonthViewController.h"
 
-typedef NS_ENUM(NSUInteger, MonthAnimationDirection)
-{
-    MonthAnimationDirectionUp,
-    MonthAnimationDirectionDown,
-};
-
-@interface SPCalendarView ()
+@interface SPCalendarView () <SPCalendarMonthViewControllerDelegate>
 
 @property (strong, nonatomic) NSDate *selectedDate;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (strong, nonatomic) UIButton *previousMonthButton;
 @property (strong, nonatomic) UIButton *nextMonthButton;
 @property (strong, nonatomic) UILabel *dateLabel;
-@property (strong, nonatomic) SPCalendarMonthView *monthView;
+@property (strong, nonatomic) SPCalendarMonthViewController *monthViewController;
 @property (strong, nonatomic) UIView *headerView;
 
-@property (assign, nonatomic) CGRect monthViewFrame;
-@property (assign, nonatomic) BOOL isChangedMonth;
+@property (assign, nonatomic) BOOL monthIsChaging;
 
 @end
 
@@ -41,7 +34,7 @@ typedef NS_ENUM(NSUInteger, MonthAnimationDirection)
         self.clipsToBounds = YES;
         self.backgroundColor = [UIColor whiteColor];
         
-        self.isChangedMonth = NO;
+        self.monthIsChaging = NO;
         self.selectedDate = [NSDate date];
         self.dateFormatter = [[NSDateFormatter alloc] init];
         self.dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
@@ -131,14 +124,13 @@ typedef NS_ENUM(NSUInteger, MonthAnimationDirection)
         saturdayLabel.textAlignment = NSTextAlignmentCenter;
         [self.headerView addSubview:saturdayLabel];
         
-        self.monthViewFrame = CGRectMake(0.0f,
-                                         secondLineView.frame.origin.y + secondLineView.frame.size.height,
-                                         self.frame.size.width,
-                                         self.frame.size.height - (secondLineView.frame.origin.y + secondLineView.frame.size.height));
+        self.monthViewController = [[SPCalendarMonthViewController alloc] initWithViewFrame:CGRectMake(0.0f,
+                                                                                                       secondLineView.frame.origin.y + secondLineView.frame.size.height,
+                                                                                                       self.frame.size.width,
+                                                                                                       self.frame.size.height - (secondLineView.frame.origin.y + secondLineView.frame.size.height))];
+        self.monthViewController.monthViewControllerDelegate = self;
         
-        self.monthView = [[SPCalendarMonthView alloc] initWithFrame:self.monthViewFrame];
-        
-        [self addSubview:self.monthView];
+        [self addSubview:self.monthViewController.view];
     }
     
     return self;
@@ -160,9 +152,9 @@ typedef NS_ENUM(NSUInteger, MonthAnimationDirection)
 
 - (void)changeMonthButtonAction:(UIButton *)sender
 {
-    if (!self.isChangedMonth)
+    if (!self.monthIsChaging)
     {
-        self.isChangedMonth = YES;
+        self.monthIsChaging = YES;
         
         MonthAnimationDirection monthAnimationDirection = MonthAnimationDirectionUp;
         
@@ -179,43 +171,20 @@ typedef NS_ENUM(NSUInteger, MonthAnimationDirection)
         
         self.dateLabel.text = [self.dateFormatter stringFromDate:self.selectedDate];
         
-        CGFloat monthViewToDisplayOriginY = 0.0f;
-        CGFloat oldMonthViewNewOriginY = 0.0f;
-        
-        if (monthAnimationDirection == MonthAnimationDirectionUp)
-        {
-            monthViewToDisplayOriginY = self.frame.size.height;
-            oldMonthViewNewOriginY = -self.monthView.frame.size.height;
-        }
-        else if (monthAnimationDirection == MonthAnimationDirectionDown)
-        {
-            monthViewToDisplayOriginY = self.monthViewFrame.origin.y - self.monthViewFrame.size.height;
-            oldMonthViewNewOriginY = self.monthViewFrame.origin.y + self.monthViewFrame.size.height;
-        }
-        
-        SPCalendarMonthView *monthViewToDisplay = [[SPCalendarMonthView alloc] initWithFrame:CGRectMake(self.monthViewFrame.origin.x,
-                                                                                                        monthViewToDisplayOriginY,
-                                                                                                        self.monthViewFrame.size.width,
-                                                                                                        self.monthViewFrame.size.height)
-                                                                                        date:self.selectedDate];
-        [self addSubview:monthViewToDisplay];
-        [self bringSubviewToFront:self.headerView];
-        
-        __weak SPCalendarView *weakSelf = self;
-        
-        [UIView animateWithDuration:0.3f animations:^{
-            weakSelf.monthView.frame = CGRectMake(weakSelf.monthView.frame.origin.x, oldMonthViewNewOriginY, weakSelf.monthView.frame.size.width, weakSelf.monthView.frame.size.height);
-            monthViewToDisplay.frame = weakSelf.monthViewFrame;
-        } completion:^(BOOL finished) {
-            if (finished)
-            {
-                [weakSelf.monthView removeFromSuperview];
-                weakSelf.monthView = monthViewToDisplay;
-                
-                weakSelf.isChangedMonth = NO;
-            }
-        }];
+        [self.monthViewController changeMonthViewInDirection:monthAnimationDirection];
     }
+}
+
+#pragma mark - SPCalendarMonthViewControllerDelegate
+
+- (void)calendarMonthViewControllerAnimationWillStart:(SPCalendarMonthViewController *)monthViewController
+{
+    [self bringSubviewToFront:self.headerView];
+}
+
+- (void)calendarMonthViewControllerAnimationDidStop:(SPCalendarMonthViewController *)monthViewController
+{
+    self.monthIsChaging = NO;
 }
 
 @end
