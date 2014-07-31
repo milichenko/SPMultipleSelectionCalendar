@@ -8,12 +8,19 @@
 
 #import "SPCalendarMonthViewController.h"
 
+typedef NS_ENUM(NSUInteger, SelectionType) {
+    SelectionTypeNone,
+    SelectionTypeOneDate,
+    SelectionTypeMultipleDate,
+};
+
 @interface SPCalendarMonthViewController ()
 
 @property (strong, nonatomic) NSMutableArray *dateOfMonthButtons;
 @property (strong, nonatomic) UIView *monthView;
 
 @property (assign, nonatomic) CGRect monthViewFrame;
+@property (assign, nonatomic) SelectionType selectionType;
 
 @end
 
@@ -46,6 +53,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.selectionType = SelectionTypeNone;
     
     self.view.frame = self.monthViewFrame;
     
@@ -167,6 +176,8 @@
     
     BOOL endOfCycle = NO;
     
+    //NSDateFormatter *dateFormatter = [NSDateFormatter date]
+    
     for (int i = 0; i < 5; i++)
     {
         if (endOfCycle)
@@ -189,6 +200,9 @@
             else
             {
                 UIButton *btn = self.dateOfMonthButtons[i][j];
+                
+                //btn.tag = [NSString stringWithFormat:@"%d%d%d", currentTitleValue, dateComponents.month, dateComponents.year];
+                
                 [btn setTitle:[NSString stringWithFormat:@"%d", currentTitleValue] forState:UIControlStateNormal];
                 
                 currentTitleValue++;

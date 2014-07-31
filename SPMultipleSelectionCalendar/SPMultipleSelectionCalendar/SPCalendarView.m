@@ -37,7 +37,7 @@
         self.monthIsChaging = NO;
         self.selectedDate = [NSDate date];
         self.dateFormatter = [[NSDateFormatter alloc] init];
-        self.dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+        //self.dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
         self.dateFormatter.dateFormat = @"MMMM yyyy";
         
         self.headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.frame.size.width, 79.0f)];
