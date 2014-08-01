@@ -8,19 +8,17 @@
 
 #import "SPCalendarMonthViewController.h"
 
-typedef NS_ENUM(NSUInteger, SelectionType) {
-    SelectionTypeNone,
-    SelectionTypeOneDate,
-    SelectionTypeMultipleDate,
-};
+#define MONTHS_ROWS_COUNT 5
+#define MONTHS_COLUMNS_COUNT 7
 
 @interface SPCalendarMonthViewController ()
 
 @property (strong, nonatomic) NSMutableArray *dateOfMonthButtons;
 @property (strong, nonatomic) UIView *monthView;
+@property (strong, nonatomic) UIButton *firstSelectedButton;
+@property (strong, nonatomic) UIButton *secondSelectedButton;
 
 @property (assign, nonatomic) CGRect monthViewFrame;
-@property (assign, nonatomic) SelectionType selectionType;
 
 @end
 
@@ -53,8 +51,6 @@ typedef NS_ENUM(NSUInteger, SelectionType) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.selectionType = SelectionTypeNone;
     
     self.view.frame = self.monthViewFrame;
     
@@ -131,13 +127,13 @@ typedef NS_ENUM(NSUInteger, SelectionType) {
     
     self.dateOfMonthButtons = [NSMutableArray array];
     
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < MONTHS_ROWS_COUNT; i++)
     {
         self.dateOfMonthButtons[i] = [NSMutableArray array];
         
         CGFloat btnX = 0.0f;
         
-        for (int j = 0; j < 7; j++)
+        for (int j = 0; j < MONTHS_COLUMNS_COUNT; j++)
         {
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(btnX, btnY, CONTROLS_WIDTH, dayOfMonthButtonsHeight);
@@ -176,16 +172,17 @@ typedef NS_ENUM(NSUInteger, SelectionType) {
     
     BOOL endOfCycle = NO;
     
-    //NSDateFormatter *dateFormatter = [NSDateFormatter date]
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"ddMyyyy";
     
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < MONTHS_ROWS_COUNT; i++)
     {
         if (endOfCycle)
         {
             break;
         }
         
-        for (int j = 0; j < 7; j++)
+        for (int j = 0; j < MONTHS_COLUMNS_COUNT; j++)
         {
             if (currentTitleValue > monthRange.length)
             {
@@ -199,10 +196,12 @@ typedef NS_ENUM(NSUInteger, SelectionType) {
             }
             else
             {
+                NSString *stringFormat = currentTitleValue < 10 ? @"0%d%d%d" : @"%d%d%d";
+                NSString *dateStr = [NSString stringWithFormat:stringFormat, currentTitleValue, dateComponents.month, dateComponents.year];
+                NSDate *dateForTag = [dateFormatter dateFromString:dateStr];
+                
                 UIButton *btn = self.dateOfMonthButtons[i][j];
-                
-                //btn.tag = [NSString stringWithFormat:@"%d%d%d", currentTitleValue, dateComponents.month, dateComponents.year];
-                
+                btn.tag = (NSInteger)dateForTag.timeIntervalSince1970;
                 [btn setTitle:[NSString stringWithFormat:@"%d", currentTitleValue] forState:UIControlStateNormal];
                 
                 currentTitleValue++;
@@ -211,13 +210,90 @@ typedef NS_ENUM(NSUInteger, SelectionType) {
     }
 }
 
+- (void)changeAppearanceForButtons:(NSArray *)buttons isHighlighted:(BOOL)isHighlighted
+{
+    for (UIButton *btn in buttons)
+    {
+        btn.selected = isHighlighted;
+        [btn setTitleColor:isHighlighted ? [UIColor lightGrayColor] : [UIColor blackColor] forState:UIControlStateNormal];
+    }
+}
+
+- (NSArray *)arrayForHighlightBetweenFirstDate:(NSInteger)firstDate andSecondDate:(NSInteger)secondDate
+{
+    NSMutableArray *arr = [NSMutableArray array];
+    
+    BOOL endOfCycle = NO;
+    
+    for (int i = 0; i < MONTHS_ROWS_COUNT; i++)
+    {
+        if (endOfCycle)
+        {
+            break;
+        }
+        
+        for (int j = 0; j < MONTHS_COLUMNS_COUNT; j++)
+        {
+            UIButton *btn = self.dateOfMonthButtons[i][j];
+            
+            if (btn.tag >= firstDate && btn.tag <= secondDate)
+            {
+                [arr addObject:btn];
+            }
+            else if (btn.tag > secondDate)
+            {
+                endOfCycle = YES;
+                
+                break;
+            }
+        }
+    }
+    
+    return arr;
+}
+
 #pragma mark - Actions
 
 - (void)dayButtonAction:(UIButton *)sender
 {
-    sender.selected = !sender.selected;
-    
-    [sender setTitleColor:sender.selected ? [UIColor lightGrayColor] : [UIColor blackColor] forState:UIControlStateNormal];
+    if (!self.firstSelectedButton)
+    {
+        [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
+        
+        self.firstSelectedButton = sender;
+    }
+    else if (self.firstSelectedButton && self.secondSelectedButton && sender.tag >= self.firstSelectedButton.tag && sender.tag <= self.secondSelectedButton.tag)
+    {
+        NSArray *buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:self.secondSelectedButton.tag];
+        
+        [self changeAppearanceForButtons:buttonsForUnhighlight isHighlighted:NO];
+        [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
+        
+        self.firstSelectedButton = sender;
+        self.secondSelectedButton = nil;
+    }
+    else if (self.firstSelectedButton)
+    {
+        if (sender.tag < self.firstSelectedButton.tag)
+        {
+            [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
+            
+            NSArray *buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:self.secondSelectedButton.tag];
+            
+            [self changeAppearanceForButtons:buttonsForUnhighlight isHighlighted:NO];
+            
+            self.firstSelectedButton = sender;
+            self.secondSelectedButton = nil;
+        }
+        else if (sender.tag > self.firstSelectedButton.tag)
+        {
+            self.secondSelectedButton = sender;
+            
+            NSArray *buttonsForHighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:sender.tag];
+            
+            [self changeAppearanceForButtons:buttonsForHighlight isHighlighted:YES];
+        }
+    }
 }
 
 @end
