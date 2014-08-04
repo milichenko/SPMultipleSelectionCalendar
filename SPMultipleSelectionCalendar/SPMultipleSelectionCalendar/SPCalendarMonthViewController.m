@@ -59,6 +59,9 @@
     self.monthView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.monthViewFrame.size.width, self.monthViewFrame.size.height)];
     [self.view addSubview:self.monthView];
     
+    UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureDetected:)];
+    [self.view addGestureRecognizer:panGestureRecognizer];
+
     [self arrangeDayButtonsForView:self.monthView withDate:[NSDate date]];
 }
 
@@ -74,7 +77,7 @@
 {
     CGFloat viewToDisplayOriginY = 0.0f;
     CGFloat oldViewNewOriginY = 0.0f;
-    NSLog(@"%@", date);
+    
     if (animationDirection == MonthAnimationDirectionUp)
     {
         viewToDisplayOriginY = self.monthView.frame.size.height;
@@ -201,6 +204,7 @@
             {
                 dateComponents.day = currentTitleValue;
                 NSDate *dateForTag = [calendar dateFromComponents:dateComponents];
+                
                 UIButton *btn = self.dateOfMonthButtons[i][j];
                 btn.tag = (NSInteger)dateForTag.timeIntervalSince1970;
                 [btn setTitle:[NSString stringWithFormat:@"%d", currentTitleValue] forState:UIControlStateNormal];
@@ -273,57 +277,99 @@
 
 - (void)dayButtonAction:(UIButton *)sender
 {
-    if (!self.firstSelectedButton)
+    if (sender.tag != 0)
     {
-        [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
-        
-        self.firstSelectedButton = sender;
-    }
-    else if (self.firstSelectedButton && self.secondSelectedButton && sender.tag >= self.firstSelectedButton.tag && sender.tag <= self.secondSelectedButton.tag)
-    {
-        NSArray *buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:self.secondSelectedButton.tag];
-        
-        [self changeAppearanceForButtons:buttonsForUnhighlight isHighlighted:NO];
-        [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
-        
-        self.firstSelectedButton = sender;
-        self.secondSelectedButton = nil;
-    }
-    else if (self.firstSelectedButton)
-    {
-        if (sender.tag < self.firstSelectedButton.tag)
+        if (!self.firstSelectedButton)
         {
             [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
             
-            NSInteger endDateTag = self.secondSelectedButton ? self.secondSelectedButton.tag : self.firstSelectedButton.tag;
-            
-            NSArray *buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:endDateTag];
+            self.firstSelectedButton = sender;
+        }
+        else if (self.firstSelectedButton && self.secondSelectedButton && sender.tag >= self.firstSelectedButton.tag && sender.tag <= self.secondSelectedButton.tag)
+        {
+            NSArray *buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:self.secondSelectedButton.tag];
             
             [self changeAppearanceForButtons:buttonsForUnhighlight isHighlighted:NO];
+            [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
             
             self.firstSelectedButton = sender;
             self.secondSelectedButton = nil;
         }
-        else if (sender.tag > self.firstSelectedButton.tag)
+        else if (self.firstSelectedButton)
         {
-            self.secondSelectedButton = sender;
-            
-            NSArray *buttonsForHighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:sender.tag];
-            
-            [self changeAppearanceForButtons:buttonsForHighlight isHighlighted:YES];
+            if (sender.tag < self.firstSelectedButton.tag)
+            {
+                [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
+                
+                NSInteger endDateTag = self.secondSelectedButton ? self.secondSelectedButton.tag : self.firstSelectedButton.tag;
+                
+                NSArray *buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:endDateTag];
+                
+                [self changeAppearanceForButtons:buttonsForUnhighlight isHighlighted:NO];
+                
+                self.firstSelectedButton = sender;
+                self.secondSelectedButton = nil;
+            }
+            else if (sender.tag > self.firstSelectedButton.tag)
+            {
+                self.secondSelectedButton = sender;
+                
+                NSArray *buttonsForHighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:sender.tag];
+                
+                [self changeAppearanceForButtons:buttonsForHighlight isHighlighted:YES];
+            }
+        }
+        
+        MonthAnimationDirection monthAnimationDirection = MonthAnimationDirectionNone;
+        
+        if (sender.tag == self.maxTagForCurrentMonth)
+        {
+            monthAnimationDirection = MonthAnimationDirectionUp;
+        }
+        
+        if ([self.monthViewControllerDelegate respondsToSelector:@selector(calendarMonthViewController:needChangeMonthInDirection:)])
+        {
+            [self.monthViewControllerDelegate calendarMonthViewController:self needChangeMonthInDirection:monthAnimationDirection];
         }
     }
+}
+
+- (void)panGestureDetected:(UIPanGestureRecognizer *)gestureRecognizer
+{
+    CGPoint gestureLocation = [gestureRecognizer locationInView:self.monthView];
     
-    MonthAnimationDirection monthAnimationDirection = MonthAnimationDirectionNone;
-    
-    if (sender.tag == self.maxTagForCurrentMonth)
+    for (int i = 0; i < MONTHS_ROWS_COUNT; i++)
     {
-        monthAnimationDirection = MonthAnimationDirectionUp;
-    }
-    
-    if ([self.monthViewControllerDelegate respondsToSelector:@selector(calendarMonthViewController:needChangeMonthInDirection:)])
-    {
-        [self.monthViewControllerDelegate calendarMonthViewController:self needChangeMonthInDirection:monthAnimationDirection];
+        for (int j = 0; j < MONTHS_COLUMNS_COUNT; j++)
+        {
+            UIButton *btn = self.dateOfMonthButtons[i][j];
+            
+            if (btn.tag != 0 && CGRectContainsPoint(btn.frame, gestureLocation) && btn.tag > self.firstSelectedButton.tag)
+            {
+                if (!self.firstSelectedButton)
+                {
+                    self.firstSelectedButton = btn;
+                }
+                
+                if (self.firstSelectedButton && !self.secondSelectedButton && self.firstSelectedButton != btn)
+                {
+                    self.secondSelectedButton = btn;
+                }
+                
+                NSArray *buttonsForHighlight = nil;
+                
+                if (self.firstSelectedButton && self.secondSelectedButton)
+                {
+                    buttonsForHighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:self.secondSelectedButton.tag];
+                }
+                else if (self.firstSelectedButton)
+                {
+                    buttonsForHighlight = @[self.firstSelectedButton];
+                }
+                
+                [self changeAppearanceForButtons:buttonsForHighlight isHighlighted:YES];
+            }
+        }
     }
 }
 
