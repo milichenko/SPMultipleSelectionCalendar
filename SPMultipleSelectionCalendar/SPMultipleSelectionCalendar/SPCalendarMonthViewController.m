@@ -316,11 +316,7 @@
     
     MonthAnimationDirection monthAnimationDirection = MonthAnimationDirectionNone;
     
-    if (sender.tag == self.minTagForCurrentMonth)
-    {
-        monthAnimationDirection = MonthAnimationDirectionDown;
-    }
-    else if (sender.tag == self.maxTagForCurrentMonth)
+    if (sender.tag == self.maxTagForCurrentMonth)
     {
         monthAnimationDirection = MonthAnimationDirectionUp;
     }

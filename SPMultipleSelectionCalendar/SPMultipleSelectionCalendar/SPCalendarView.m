@@ -193,9 +193,6 @@
     
     switch (animationDirection)
     {
-        case MonthAnimationDirectionDown:
-            sender = self.previousMonthButton;
-            break;
         case MonthAnimationDirectionUp:
             sender = self.nextMonthButton;
             break;
