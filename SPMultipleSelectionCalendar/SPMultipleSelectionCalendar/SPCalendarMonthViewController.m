@@ -199,7 +199,8 @@
                 btn.tag = (NSInteger)dateForTag.timeIntervalSince1970;
                 [btn setTitle:[NSString stringWithFormat:@"%d", currentTitleValue] forState:UIControlStateNormal];
                 
-                if (self.firstSelectedButton && self.secondSelectedButton && btn.tag >= self.firstSelectedButton.tag && btn.tag <= self.secondSelectedButton.tag)
+                if ((self.firstSelectedButton && self.secondSelectedButton && btn.tag >= self.firstSelectedButton.tag && btn.tag <= self.secondSelectedButton.tag) ||
+                    (self.firstSelectedButton && btn.tag == self.firstSelectedButton.tag))
                 {
                     [self changeAppearanceForButtons:@[btn] isHighlighted:YES];
                 }
