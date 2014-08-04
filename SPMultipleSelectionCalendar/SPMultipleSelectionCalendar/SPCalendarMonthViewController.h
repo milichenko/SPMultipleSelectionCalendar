@@ -12,6 +12,7 @@
 
 typedef NS_ENUM(NSUInteger, MonthAnimationDirection)
 {
+    MonthAnimationDirectionNone,
     MonthAnimationDirectionUp,
     MonthAnimationDirectionDown,
 };

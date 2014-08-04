@@ -314,7 +314,7 @@
         }
     }
     
-    MonthAnimationDirection monthAnimationDirection = MonthAnimationDirectionUp;
+    MonthAnimationDirection monthAnimationDirection = MonthAnimationDirectionNone;
     
     if (sender.tag == self.minTagForCurrentMonth)
     {
