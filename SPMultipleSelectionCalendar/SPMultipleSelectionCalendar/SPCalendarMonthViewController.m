@@ -172,9 +172,6 @@
     
     BOOL endOfCycle = NO;
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"ddMyyyy";
-    
     for (int i = 0; i < MONTHS_ROWS_COUNT; i++)
     {
         if (endOfCycle)
@@ -196,13 +193,16 @@
             }
             else
             {
-                NSString *stringFormat = currentTitleValue < 10 ? @"0%d%d%d" : @"%d%d%d";
-                NSString *dateStr = [NSString stringWithFormat:stringFormat, currentTitleValue, dateComponents.month, dateComponents.year];
-                NSDate *dateForTag = [dateFormatter dateFromString:dateStr];
-                
+                dateComponents.day = currentTitleValue;
+                NSDate *dateForTag = [calendar dateFromComponents:dateComponents];
                 UIButton *btn = self.dateOfMonthButtons[i][j];
                 btn.tag = (NSInteger)dateForTag.timeIntervalSince1970;
                 [btn setTitle:[NSString stringWithFormat:@"%d", currentTitleValue] forState:UIControlStateNormal];
+                
+                if (self.firstSelectedButton && self.secondSelectedButton && btn.tag >= self.firstSelectedButton.tag && btn.tag <= self.secondSelectedButton.tag)
+                {
+                    [self changeAppearanceForButtons:@[btn] isHighlighted:YES];
+                }
                 
                 currentTitleValue++;
             }
@@ -278,7 +278,9 @@
         {
             [self changeAppearanceForButtons:@[sender] isHighlighted:YES];
             
-            NSArray *buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:self.secondSelectedButton.tag];
+            NSInteger endDateTag = self.secondSelectedButton ? self.secondSelectedButton.tag : self.firstSelectedButton.tag;
+            
+            NSArray *buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:endDateTag];
             
             [self changeAppearanceForButtons:buttonsForUnhighlight isHighlighted:NO];
             
