@@ -23,6 +23,7 @@ typedef NS_ENUM(NSUInteger, MonthAnimationDirection)
 @optional
 - (void)calendarMonthViewControllerAnimationWillStart:(SPCalendarMonthViewController *)monthViewController;
 - (void)calendarMonthViewControllerAnimationDidStop:(SPCalendarMonthViewController *)monthViewController;
+- (void)calendarMonthViewController:(SPCalendarMonthViewController *)monthViewController needChangeMonthInDirection:(MonthAnimationDirection)animationDirection;
 
 @end
 

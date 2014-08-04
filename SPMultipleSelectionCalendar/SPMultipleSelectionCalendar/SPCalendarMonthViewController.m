@@ -19,6 +19,8 @@
 @property (strong, nonatomic) UIButton *secondSelectedButton;
 
 @property (assign, nonatomic) CGRect monthViewFrame;
+@property (assign, nonatomic) NSInteger minTagForCurrentMonth;
+@property (assign, nonatomic) NSInteger maxTagForCurrentMonth;
 
 @end
 
@@ -72,7 +74,7 @@
 {
     CGFloat viewToDisplayOriginY = 0.0f;
     CGFloat oldViewNewOriginY = 0.0f;
-    
+    NSLog(@"%@", date);
     if (animationDirection == MonthAnimationDirectionUp)
     {
         viewToDisplayOriginY = self.monthView.frame.size.height;
@@ -157,6 +159,7 @@
 - (void)arrangeMonthDaysInDate:(NSDate *)date
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
+    calendar.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
     
     NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit fromDate:date];
     
@@ -171,6 +174,9 @@
     int currentTitleValue = 1;
     
     BOOL endOfCycle = NO;
+    
+    self.minTagForCurrentMonth = 0;
+    self.maxTagForCurrentMonth = 0;
     
     for (int i = 0; i < MONTHS_ROWS_COUNT; i++)
     {
@@ -198,6 +204,16 @@
                 UIButton *btn = self.dateOfMonthButtons[i][j];
                 btn.tag = (NSInteger)dateForTag.timeIntervalSince1970;
                 [btn setTitle:[NSString stringWithFormat:@"%d", currentTitleValue] forState:UIControlStateNormal];
+                
+                if (self.minTagForCurrentMonth == 0)
+                {
+                    self.minTagForCurrentMonth = btn.tag;
+                }
+                
+                if (btn.tag > self.maxTagForCurrentMonth)
+                {
+                    self.maxTagForCurrentMonth = btn.tag;
+                }
                 
                 if ((self.firstSelectedButton && self.secondSelectedButton && btn.tag >= self.firstSelectedButton.tag && btn.tag <= self.secondSelectedButton.tag) ||
                     (self.firstSelectedButton && btn.tag == self.firstSelectedButton.tag))
@@ -296,6 +312,22 @@
             
             [self changeAppearanceForButtons:buttonsForHighlight isHighlighted:YES];
         }
+    }
+    
+    MonthAnimationDirection monthAnimationDirection = MonthAnimationDirectionUp;
+    
+    if (sender.tag == self.minTagForCurrentMonth)
+    {
+        monthAnimationDirection = MonthAnimationDirectionDown;
+    }
+    else if (sender.tag == self.maxTagForCurrentMonth)
+    {
+        monthAnimationDirection = MonthAnimationDirectionUp;
+    }
+    
+    if ([self.monthViewControllerDelegate respondsToSelector:@selector(calendarMonthViewController:needChangeMonthInDirection:)])
+    {
+        [self.monthViewControllerDelegate calendarMonthViewController:self needChangeMonthInDirection:monthAnimationDirection];
     }
 }
 

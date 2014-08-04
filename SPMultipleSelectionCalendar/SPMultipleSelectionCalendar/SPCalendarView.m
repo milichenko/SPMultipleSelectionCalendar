@@ -187,4 +187,11 @@
     self.monthIsChaging = NO;
 }
 
+- (void)calendarMonthViewController:(SPCalendarMonthViewController *)monthViewController needChangeMonthInDirection:(MonthAnimationDirection)animationDirection
+{
+    UIButton *sender = animationDirection == MonthAnimationDirectionDown ? self.previousMonthButton : self.nextMonthButton;
+    
+    [self changeMonthButtonAction:sender];
+}
+
 @end
