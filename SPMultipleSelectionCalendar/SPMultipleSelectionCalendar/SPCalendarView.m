@@ -11,7 +11,7 @@
 
 @interface SPCalendarView () <SPCalendarMonthViewControllerDelegate>
 
-@property (strong, nonatomic) NSDate *selectedDate;
+@property (strong, nonatomic) NSDate *dateForMonthLabel;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (strong, nonatomic) UIButton *previousMonthButton;
 @property (strong, nonatomic) UIButton *nextMonthButton;
@@ -35,7 +35,7 @@
         self.backgroundColor = [UIColor whiteColor];
         
         self.monthIsChaging = NO;
-        self.selectedDate = [NSDate date];
+        self.dateForMonthLabel = [NSDate date];
         self.dateFormatter = [[NSDateFormatter alloc] init];
         //self.dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
         self.dateFormatter.dateFormat = @"MMMM yyyy";
@@ -74,7 +74,7 @@
                                                                    self.previousMonthButton.frame.size.height)];
         self.dateLabel.textColor = [UIColor colorWithRed:99 / 255.0f green:87 / 255.0f blue:207 / 255.0f alpha:1.0f];
         self.dateLabel.textAlignment = NSTextAlignmentCenter;
-        self.dateLabel.text = [self.dateFormatter stringFromDate:self.selectedDate];
+        self.dateLabel.text = [self.dateFormatter stringFromDate:self.dateForMonthLabel];
         [self.headerView addSubview:self.dateLabel];
         
         CGFloat dayOfWeekLabelsOriginY = firstLineView.frame.origin.y + firstLineView.frame.size.height;
@@ -160,18 +160,18 @@
         
         if (sender == self.previousMonthButton)
         {
-            self.selectedDate = [self addToDate:self.selectedDate monthsCount:-1];
+            self.dateForMonthLabel = [self addToDate:self.dateForMonthLabel monthsCount:-1];
             monthAnimationDirection = MonthAnimationDirectionDown;
         }
         else if (sender == self.nextMonthButton)
         {
-            self.selectedDate = [self addToDate:self.selectedDate monthsCount:1];
+            self.dateForMonthLabel = [self addToDate:self.dateForMonthLabel monthsCount:1];
             monthAnimationDirection = MonthAnimationDirectionUp;
         }
         
-        self.dateLabel.text = [self.dateFormatter stringFromDate:self.selectedDate];
+        self.dateLabel.text = [self.dateFormatter stringFromDate:self.dateForMonthLabel];
         
-        [self.monthViewController changeMonthViewInDirection:monthAnimationDirection withDate:self.selectedDate];
+        [self.monthViewController changeMonthViewInDirection:monthAnimationDirection withDate:self.dateForMonthLabel];
     }
 }
 

@@ -351,15 +351,17 @@
                     self.firstSelectedButton = btn;
                 }
                 
-                if (self.firstSelectedButton && !self.secondSelectedButton && self.firstSelectedButton != btn)
+                if (self.firstSelectedButton && self.firstSelectedButton != btn)
                 {
                     self.secondSelectedButton = btn;
                 }
                 
+                NSArray *buttonsForUnhighlight = nil;
                 NSArray *buttonsForHighlight = nil;
                 
                 if (self.firstSelectedButton && self.secondSelectedButton)
                 {
+                    buttonsForUnhighlight = [self arrayForHighlightBetweenFirstDate:self.minTagForCurrentMonth andSecondDate:self.maxTagForCurrentMonth];
                     buttonsForHighlight = [self arrayForHighlightBetweenFirstDate:self.firstSelectedButton.tag andSecondDate:self.secondSelectedButton.tag];
                 }
                 else if (self.firstSelectedButton)
@@ -367,7 +369,16 @@
                     buttonsForHighlight = @[self.firstSelectedButton];
                 }
                 
+                [self changeAppearanceForButtons:buttonsForUnhighlight isHighlighted:NO];
                 [self changeAppearanceForButtons:buttonsForHighlight isHighlighted:YES];
+                
+                if (self.secondSelectedButton.tag == self.maxTagForCurrentMonth)
+                {
+                    if ([self.monthViewControllerDelegate respondsToSelector:@selector(calendarMonthViewController:needChangeMonthInDirection:)])
+                    {
+                        [self.monthViewControllerDelegate calendarMonthViewController:self needChangeMonthInDirection:MonthAnimationDirectionUp];
+                    }
+                }
             }
         }
     }
