@@ -233,6 +233,29 @@
 
 - (void)changeAppearanceForButtons:(NSArray *)buttons isHighlighted:(BOOL)isHighlighted
 {
+    if (self.firstSelectedButton)
+    {
+        NSMutableArray *datesIntervalArray = [NSMutableArray array];
+        
+        NSInteger firstDateInterval = self.firstSelectedButton.tag;
+        NSDate *firstDate = [NSDate dateWithTimeIntervalSince1970:firstDateInterval];
+        
+        datesIntervalArray[0] = firstDate;
+        
+        if (self.secondSelectedButton)
+        {
+            NSInteger lastDateInterval = self.secondSelectedButton.tag;
+            NSDate *lastDate = [NSDate dateWithTimeIntervalSince1970:lastDateInterval];
+            
+            datesIntervalArray[1] = lastDate;
+        }
+        
+        if ([self.monthViewControllerDelegate respondsToSelector:@selector(calendarMonthViewController:didChangeDateSelection:)])
+        {
+            [self.monthViewControllerDelegate calendarMonthViewController:self didChangeDateSelection:datesIntervalArray];
+        }
+    }
+    
     for (UIButton *btn in buttons)
     {
         btn.selected = isHighlighted;

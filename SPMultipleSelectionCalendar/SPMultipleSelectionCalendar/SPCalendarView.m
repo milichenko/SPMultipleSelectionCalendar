@@ -204,4 +204,9 @@
     [self changeMonthButtonAction:sender];
 }
 
+- (void)calendarMonthViewController:(SPCalendarMonthViewController *)monthViewController didChangeDateSelection:(NSArray *)dateSelectionArray
+{
+    NSLog(@"%@", dateSelectionArray);
+}
+
 @end
